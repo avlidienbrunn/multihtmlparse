@@ -11,6 +11,10 @@ This project was made to test multiple server-side HTML parsers, to compare thei
 
 Then visit `http://127.0.0.1/`
 
+Input HTML and click parse. The result will replace `__PARSER__` with whatever parser was used, and (if checked) render the result in an iframe.
+
+For example, `<svg onload=console.log('__PARSER__')>`
+
 ## Running CLI
 
 `docker-compose down && docker-compose build --parallel; docker-compose up;`
