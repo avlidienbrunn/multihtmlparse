@@ -1,6 +1,7 @@
 <html>
     <head>
         <script src="/css/prism.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
         <link  href="/css/prism.css" rel="stylesheet"/>
         <script>
             var languages = [
@@ -29,17 +30,21 @@
             function addResult(lang, value, error){
                 output.innerHTML += `<tr><td>${lang}</td><td>${value}</td></tr>\n`;
             }
-            async function parse(){
+            async function parse(selected_input){
                 output.innerText = "";
+                rendered.innerHTML = "";
                 started = [];
                 parser = new DOMParser();
-                htmlDoc = parser.parseFromString(input.value, 'text/html');
+                htmlDoc = parser.parseFromString(selected_input.value, 'text/html');
                 parsed_lang = navigator.userAgent;
                 parsed_val = htmlDoc.documentElement.outerHTML;
+                if(/__PARSER__/i.test(parsed_val)){
+                    parsed_val = parsed_val.replace(/__PARSER__/gi, parsed_lang);
+                }
                 output.innerHTML += `<tr><td>${parsed_lang}</td><td><code class="language-markup">${parsed_val.encode()}</code></td></tr>\n`;
                 Prism.highlightAll();
 
-                let parseContent = lang => {started.push(lang);loader.innerText = `parsing  with ${lang}...`;fetch(`/parse/${lang}`, {method: "post", body:`html=${encodeURIComponent(input.value)}`}).then(
+                let parseContent = lang => {started.push(lang);loader.innerText = `parsing  with ${lang}...`;fetch(`/parse/${lang}`, {method: "post", body:`html=${encodeURIComponent(selected_input.value)}`}).then(
                         (response)=>{
                             started.pop();
                             if(started.length == 0){
@@ -68,7 +73,17 @@
                                     console.log(err, line);
                                     parsed_val = "ERROR";
                                 }
+                                if(/__PARSER__/i.test(parsed_val)){
+                                    parsed_val = parsed_val.replace(/__PARSER__/gi, parsed_lang);
+                                }
                                 output.innerHTML += `<tr><td>${parsed_lang}</td><td><code class="language-markup">${parsed_val.encode()}</code></td></tr>\n`;
+                                if(shouldrender.checked){
+                                    frame = document.createElement('iframe');
+                                    frame.srcdoc = parsed_val;
+                                    frame.style.height = 1;
+                                    frame.style.width = 1;
+                                    rendered.appendChild(frame);
+                                }
                                 Prism.highlightAll();
                             }
                     })};
@@ -78,8 +93,12 @@
     </head>
    <body> 
         <h2>input:</h2>
-        <textarea placeholder="<h1>hello, world!</h1>" id="input"></textarea><br>
-        <button onclick="parse()">parse</button>
+        <textarea oninput="input_dompurify.value=DOMPurify.sanitize(this.value)" placeholder="<h1>hello, world from __PARSER__ !</h1>" id="input"><h1>hello, world from __PARSER__ !</h1></textarea>
+        <button onclick="parse(input)">parse</button><br><label for="shouldrender">Render result?</label><input id="shouldrender" type="checkbox" value="Render HTML?"/>
+        <h2>DOMPurified:</h2>
+        <textarea placeholder="DOMPurified" diabled id="input_dompurify"></textarea>
+        <button onclick="parse(input_dompurify)">parse DOMPurified</button><br>
+        <div id="rendered"></div>
         <hr/>
         <h2>output: <font color=orange id="loader"></font></h2>
         
