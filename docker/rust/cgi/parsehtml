@@ -1,0 +1,10 @@
+#!/bin/bash
+function urldecode() { : "${*//+/ }"; echo -e "${_//%/\\x}"; }
+
+in_raw="$(cat|grep -oE 'html=([^&]+)'|sed 's/^html=//g')" # get html parameter
+in_decode=$(urldecode "$in_raw") # url decode parameter
+
+echo "content-type: text/plain"
+echo ""
+cd /app
+LANG=C.UTF-8 HOME=/app /app/parsehtml "$in_decode"

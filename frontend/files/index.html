@@ -1,0 +1,121 @@
+<html>
+    <head>
+        <script src="/css/prism.js"></script>
+        <link  href="/css/prism.css" rel="stylesheet"/>
+        <script>
+            var languages = [
+                'elixir',
+                'dotnet',
+                'golang',
+                'java',
+                'node',
+                'php',
+                'python',
+                'ruby',
+                'rust'
+            ];
+            Object.defineProperty(String.prototype, 'encode', {
+                value: function() {
+                    return (p=document.createElement("textarea"),p.innerText=this.toString(),p).innerHTML
+                },
+                enumerable: false
+            });
+            Object.defineProperty(String.prototype, 'strip', {
+                value: function() {
+                    return this.toString().replace(/^\s+/g,'').replace(/\s+$/g, '');
+                },
+                enumerable: false
+            });
+            function addResult(lang, value, error){
+                output.innerHTML += `<tr><td>${lang}</td><td>${value}</td></tr>\n`;
+            }
+            async function parse(){
+                output.innerText = "";
+                started = [];
+                parser = new DOMParser();
+                htmlDoc = parser.parseFromString(input.value, 'text/html');
+                parsed_lang = navigator.userAgent;
+                parsed_val = htmlDoc.documentElement.outerHTML;
+                output.innerHTML += `<tr><td>${parsed_lang}</td><td><code class="language-markup">${parsed_val.encode()}</code></td></tr>\n`;
+                Prism.highlightAll();
+
+                let parseContent = lang => {started.push(lang);loader.innerText = `parsing  with ${lang}...`;fetch(`/parse/${lang}`, {method: "post", body:`html=${encodeURIComponent(input.value)}`}).then(
+                        (response)=>{
+                            started.pop();
+                            if(started.length == 0){
+                                loader.innerText = "done!";
+                            }
+                            if(response.ok){
+                                return response.text();
+                            }else{
+                                output.innerHTML += `<tr><td>${lang}</td><td><font color="red">HTTP error!</font></td></tr>\n`;
+                                return "";
+                            }
+                    }).then(
+                        (parsed) => {
+                            for(line of parsed.split('\n')){
+                                if(line.strip() == ""){
+                                    continue;
+                                }
+                                if(!/: /.test(line)){
+                                    output.innerHTML += `<tr><td>${lang}</td><td><font color="red">parse error!</font></td></tr>\n`;
+                                    continue;
+                                }
+                                parsed_lang = line.split(': ')[0];
+                                try{
+                                    parsed_val = atob(line.split(': ')[1]).replace(/\n/g, '\\n');
+                                }catch(err){
+                                    console.log(err, line);
+                                    parsed_val = "ERROR";
+                                }
+                                output.innerHTML += `<tr><td>${parsed_lang}</td><td><code class="language-markup">${parsed_val.encode()}</code></td></tr>\n`;
+                                Prism.highlightAll();
+                            }
+                    })};
+                Promise.all(languages.map(parseContent)).then(() => {Prism.highlightAll();})
+            }
+        </script>
+    </head>
+   <body> 
+        <h2>input:</h2>
+        <textarea placeholder="<h1>hello, world!</h1>" id="input"></textarea><br>
+        <button onclick="parse()">parse</button>
+        <hr/>
+        <h2>output: <font color=orange id="loader"></font></h2>
+        
+        <table>
+            <thead>
+                <tr>
+                    <td><b>Language</b></td>
+                    <td><b>Output</b></td>
+                </tr>
+            </thead>
+            <tbody id="output">
+
+            </tbody>
+        </table>
+        <hr />
+        <h1>usage:</h1><br/>
+        <pre>
+            POST /parse/LANGUAGE HTTP/1.1
+            Host: whatever 
+            Content-Type: application/x-www-form-urlencoded
+            Content-Length: 27
+
+            html=&lt;h1>hello, world!&lt;/h1>
+        </pre>
+        <br/>
+        <h1>supported languages:</h1>
+        <ul>
+            <li>elixir</li>
+            <li>dotnet</li>
+            <li>golang</li>
+            <li>java</li>
+            <li>node</li>
+            <li>php</li>
+            <li>python</li>
+            <li>ruby</li>
+            <li>rust</li>
+        </ul>
+    </body>
+</html>

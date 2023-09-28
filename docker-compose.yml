@@ -1,0 +1,34 @@
+version: '3.3'
+services:
+    frontend:
+      container_name: frontend
+      build: ./frontend
+      ports:
+        - "80:80"
+    parse_elixir:
+      container_name: parse_elixir
+      build: ./docker/elixir
+    parse_dotnet:
+      container_name: parse_dotnet
+      build: ./docker/dotnet
+    parse_golang:
+      container_name: parse_golang
+      build: ./docker/golang
+    parse_java:
+      container_name: parse_java
+      build: ./docker/java
+    parse_node:
+      container_name: parse_node
+      build: ./docker/node
+    parse_php:
+      container_name: parse_php
+      build: ./docker/php
+    parse_python:
+      container_name: parse_python
+      build: ./docker/python
+    parse_ruby:
+      container_name: parse_ruby
+      build: ./docker/ruby
+    parse_rust:
+      container_name: parse_rust
+      build: ./docker/rust
