@@ -2,8 +2,7 @@
 
 This project was made to test multiple server-side HTML parsers, to compare their functionality to each other, and web browsers.
 
-![image](https://github.com/avlidienbrunn/multihtmlparse/assets/1272648/d4295819-1550-4dfe-856a-a52fa2c19478)
-
+![image](https://github.com/avlidienbrunn/multihtmlparse/assets/1272648/63763f43-6882-4a97-929c-4d8ccabd8c05)
 
 
 ## Running
