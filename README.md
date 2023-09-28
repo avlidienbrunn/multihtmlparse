@@ -26,8 +26,8 @@ Then visit `http://127.0.0.1/`
     - Because then it didnt work with podman
 * Can you add XYZ parser/language?
     - I wont be actively maintaining this project. Feel free to send a PR, or make a fork.
-* Why GPL?
-    - Because no future customer deserves to pay for this crappy code.
+* Why ~~GPL~~ MIT license?
+    - Even though no future customer deserves to pay for this crappy code, I don't want any contributor to withhold code for the sake of avoiding "locking it into" a GPL-like license.
 
 ## TODO
 * Use smaller base docker images
