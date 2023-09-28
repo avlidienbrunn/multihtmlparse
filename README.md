@@ -2,6 +2,9 @@
 
 This project was made to test multiple server-side HTML parsers, to compare their functionality to each other, and web browsers.
 
+![image](https://github.com/avlidienbrunn/multihtmlparse/assets/1272648/6ca6e160-1f87-43be-a9eb-bedb45b482b8)
+
+
 ## Running
 
 `docker-compose down && docker-compose build --parallel; docker-compose up;`
