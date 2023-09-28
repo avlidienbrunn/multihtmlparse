@@ -14,6 +14,10 @@ Then visit `http://127.0.0.1/`
 
 `echo "html=<h1>lol</h1>"|docker exec -i parse_dotnet "/usr/lib/cgi-bin/parsehtml"`
 
+## Demo
+
+[http://htmlparse.hackaplaneten.se/](http://htmlparse.hackaplaneten.se/)
+
 ## FAQ
 
 * Why CGI? WTF?
