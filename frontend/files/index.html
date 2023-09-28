@@ -94,7 +94,7 @@
    <body> 
         <h2>input:</h2>
         <textarea oninput="input_dompurify.value=DOMPurify.sanitize(this.value)" placeholder="<h1>hello, world from __PARSER__ !</h1>" id="input"><h1>hello, world from __PARSER__ !</h1></textarea>
-        <button onclick="parse(input)">parse</button><br><label for="shouldrender">Render result?</label><input id="shouldrender" type="checkbox" value="Render HTML?"/>
+        <button onclick="parse(input)">parse</button><br><label for="shouldrender">Render result?</label><input id="shouldrender" checked type="checkbox" value="Render HTML?"/>
         <h2>DOMPurified:</h2>
         <textarea placeholder="DOMPurified" diabled id="input_dompurify"></textarea>
         <button onclick="parse(input_dompurify)">parse DOMPurified</button><br>
@@ -116,25 +116,34 @@
         <hr />
         <h1>usage:</h1><br/>
         <pre>
-            POST /parse/LANGUAGE HTTP/1.1
-            Host: whatever 
-            Content-Type: application/x-www-form-urlencoded
-            Content-Length: 27
+            Input HTML and click parse. The result will replace <code>__PARSER__</code> with whatever parser was used, and (if checked) render the result in an iframe.
 
-            html=&lt;h1>hello, world!&lt;/h1>
+            For example, <code>&lt;svg onload=console.log('__PARSER__')></code> shouldnt execute any event handlers, but 
         </pre>
         <br/>
-        <h1>supported languages:</h1>
+        <h1>supported parsers:</h1>
         <ul>
-            <li>elixir</li>
-            <li>dotnet</li>
-            <li>golang</li>
-            <li>java</li>
-            <li>node</li>
-            <li>php</li>
-            <li>python</li>
-            <li>ruby</li>
-            <li>rust</li>
+            <li>dotnet/AngleSharp</li>
+            <li>dotnet/HtmlAgilityPack</li>
+            <li>elixir/floki</li>
+            <li>elixir/floki+fasthtml</li>
+            <li>elixir/floki+html5ever</li>
+            <li>golang/goquery</li>
+            <li>golang/htmlquery</li>
+            <li>java/jsoup</li>
+            <li>node/node-html-parser</li>
+            <li>node/cheerio</li>jsdom
+            <li>node/parse5</li>
+            <li>node/jsdom</li>
+            <li>php/DOMDocument</li>
+            <li>php/SimpleXML</li>
+            <li>python/html.parser</li>
+            <li>python/html5lib</li>
+            <li>python/lxml</li>
+            <li>ruby/nokogiri</li>
+            <li>ruby/ox</li>
+            <li>rust/scraper</li>
         </ul>
+        <h1><a href="https://github.com/avlidienbrunn/multihtmlparse">source code</a></h1>
     </body>
 </html>
